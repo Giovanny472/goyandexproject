@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/base64"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -26,12 +25,9 @@ func firstIncrement(w http.ResponseWriter, r *http.Request) {
 	// возвращает : ответ с кодом 307 и оригинальным URL в HTTP-заголовке Location.
 	case http.MethodGet:
 		{
-			log.Println("get - in...")
-
 			// принимаем url-параметр
 			getShortURL := r.URL.Path
 			getShortURL = getShortURL[1:]
-			fmt.Println("get getShortURL: ", getShortURL)
 
 			// получаем оригинал-url
 			urllong := listURL[getShortURL]
@@ -50,28 +46,26 @@ func firstIncrement(w http.ResponseWriter, r *http.Request) {
 	// возвращает : ответ с кодом 201 и сокращённым URL в виде текстовой строки в теле.
 	case http.MethodPost:
 		{
-			log.Println("post - in...")
-
 			// получаем url для сокращения
-			urllong, erb := io.ReadAll(r.Body)
-			if erb != nil {
-				log.Println("post io.readll err: ", erb.Error())
+			urllong, er := io.ReadAll(r.Body)
+			if er != nil {
+				log.Println("post io.readll err: ", er.Error())
 			}
 
-			s := "urllongBody: " + string(urllong)
-			fmt.Println(s)
+			// показать полученный url
+			log.Println("long url: ", urllong)
 
 			// сокращение url
-			newurl := shortURL(string(urllong))
+			shorturl := shortURL(string(urllong))
+			listURL[shorturl] = string(urllong)
 
-			listURL[newurl] = string(urllong)
+			log.Println("short url: ", shorturl)
 
 			// код 201
 			w.WriteHeader(http.StatusCreated)
-			//w.Header().Add("content-type", "text/html; charset=UTF-8")
 
 			// body
-			bd := []byte(newurl)
+			bd := []byte(shorturl)
 			w.Write(bd)
 		}
 
