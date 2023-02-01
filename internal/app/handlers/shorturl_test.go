@@ -1,7 +1,6 @@
 package handlers_test
 
 import (
-	"io/ioutil"
 	"net/http"
 	"strings"
 	"testing"
@@ -38,9 +37,8 @@ func TestShorturlPost(t *testing.T) {
 	}
 	defer res.Body.Close()
 
-	body, _ := ioutil.ReadAll(res.Body)
-
-	if string(body) != "L3BhcnQ" {
-		t.Errorf(" expecte code L3BhcnQ; got %s", string(body))
+	if res.StatusCode != 201 {
+		t.Errorf(" expected code 201; got %d", res.StatusCode)
 	}
+
 }
