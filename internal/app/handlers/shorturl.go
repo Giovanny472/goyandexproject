@@ -5,6 +5,8 @@ import (
 	"io"
 	"log"
 	"net/http"
+
+	"github.com/go-chi/chi/v5"
 )
 
 var listURL map[string]string
@@ -24,6 +26,57 @@ func shortURL(url string) string {
 	} else {
 		return newURL[:7]
 	}
+}
+
+func RouterInc(r chi.Router) {
+
+	r.Get("/{id}", geturl)
+
+	r.Post("/", posturl)
+
+}
+
+func geturl(w http.ResponseWriter, r *http.Request) {
+
+	// принимаем url-параметр
+	getShortURL := chi.URLParam(r, "id")
+
+	// получаем оригинал-url
+	urllong := listURL[getShortURL]
+	log.Println("get map val: ", urllong)
+
+	//***** формируем ответ ********
+	w.Header().Set("Content-Type", "text/html; charset=UTF-8")
+
+	// код 307
+	w.WriteHeader(http.StatusTemporaryRedirect)
+	// возвращаем url
+	w.Write([]byte(urllong))
+}
+
+func posturl(w http.ResponseWriter, r *http.Request) {
+
+	// получаем url для сокращения
+	urllong, er := io.ReadAll(r.Body)
+	if er != nil {
+		log.Println("post io.readll err: ", er.Error())
+	}
+
+	// показать полученный url
+	log.Println("long url: ", string(urllong))
+
+	// сокращение url
+	shorturl := shortURL(string(urllong))
+	listURL[shorturl] = string(urllong)
+
+	log.Println("short url: ", shorturl)
+
+	// код 201
+	w.WriteHeader(http.StatusCreated)
+
+	// body
+	bd := []byte(shorturl)
+	w.Write(bd)
 }
 
 func FirstIncrement(w http.ResponseWriter, r *http.Request) {
