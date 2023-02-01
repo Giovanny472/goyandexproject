@@ -13,6 +13,7 @@ func TestShorturlGet(t *testing.T) {
 	if e != nil {
 		t.Error("error get : ", e.Error())
 	}
+	defer r.Body.Close()
 
 	if r.StatusCode != 307 {
 		t.Errorf(" expecte code 307; got %d", r.StatusCode)
