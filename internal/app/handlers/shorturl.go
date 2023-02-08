@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	prefixURL string = "http://gio.com/"
+	prefixURL string = "?id=http://gio.com/"
 )
 
 var listURL map[string]string
@@ -35,7 +35,7 @@ func shortURL(url string) string {
 
 func RouterInc(r chi.Router) {
 
-	r.Get("/{id}", geturl)
+	r.Get("/", geturl)
 
 	r.Post("/", posturl)
 
@@ -44,9 +44,16 @@ func RouterInc(r chi.Router) {
 func geturl(w http.ResponseWriter, r *http.Request) {
 
 	// принимаем url-параметр
-	strShortURL := chi.URLParam(r, "id")
-	sliceShortURL := strings.Split(strShortURL, " ")
-	getShortURL := sliceShortURL[1]
+	getShortURL01 := r.URL.RawQuery
+	log.Print("[GET] getUrlong:", getShortURL01)
+
+	getShortURL := chi.URLParam(r, "id")
+	sliceShortURL := strings.Split(getShortURL01, "/")
+	log.Print("[GET] sliceShortURL:", sliceShortURL)
+
+	if len(sliceShortURL) > 0 {
+		getShortURL = sliceShortURL[len(sliceShortURL)-1]
+	}
 
 	// получаем оригинал-url
 	urllong := listURL[getShortURL]
@@ -55,8 +62,8 @@ func geturl(w http.ResponseWriter, r *http.Request) {
 	//***** формируем ответ ********
 	w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 
-	// код 307/ 301
-	w.WriteHeader(http.StatusMovedPermanently)
+	// код 307
+	w.WriteHeader(http.StatusTemporaryRedirect)
 	// возвращаем url
 	w.Write([]byte(urllong))
 }
