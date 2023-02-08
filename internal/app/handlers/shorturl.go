@@ -55,8 +55,8 @@ func geturl(w http.ResponseWriter, r *http.Request) {
 	//***** формируем ответ ********
 	w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 
-	// код 307
-	w.WriteHeader(http.StatusTemporaryRedirect)
+	// код 307/ 301
+	w.WriteHeader(http.StatusMovedPermanently)
 	// возвращаем url
 	w.Write([]byte(urllong))
 }
