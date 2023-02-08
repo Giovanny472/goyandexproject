@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	prefixUrl string = "http://gio.com/"
+	prefixURL string = "http://gio.com/"
 )
 
 var listURL map[string]string
@@ -73,7 +73,7 @@ func posturl(w http.ResponseWriter, r *http.Request) {
 
 	// сокращение url
 	encod := shortURL(string(urllong))
-	shorturl := prefixUrl + encod
+	shorturl := prefixURL + encod
 	listURL[encod] = string(urllong)
 	log.Print("[POST] short-url:", shorturl, " long-url:", string(urllong), ", encod:", encod)
 
