@@ -5,8 +5,13 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/go-chi/chi/v5"
+)
+
+const (
+	PREFIX_URL string = "http://gio.com/"
 )
 
 var listURL map[string]string
@@ -39,11 +44,13 @@ func RouterInc(r chi.Router) {
 func geturl(w http.ResponseWriter, r *http.Request) {
 
 	// принимаем url-параметр
-	getShortURL := chi.URLParam(r, "id")
+	strShortURL := chi.URLParam(r, "id")
+	sliceShortURL := strings.Split(strShortURL, " ")
+	getShortURL := sliceShortURL[1]
 
 	// получаем оригинал-url
 	urllong := listURL[getShortURL]
-	log.Println("get map val: ", urllong)
+	log.Print("[GET] getUrlong:", urllong, " ,shortURL:", getShortURL)
 
 	//***** формируем ответ ********
 	w.Header().Set("Content-Type", "text/html; charset=UTF-8")
@@ -59,17 +66,16 @@ func posturl(w http.ResponseWriter, r *http.Request) {
 	// получаем url для сокращения
 	urllong, er := io.ReadAll(r.Body)
 	if er != nil {
-		log.Println("post io.readll err: ", er.Error())
+		log.Println("post io.readll err body: ", er.Error())
 	}
 
 	// показать полученный url
-	log.Println("long url: ", string(urllong))
 
 	// сокращение url
-	shorturl := shortURL(string(urllong))
-	listURL[shorturl] = string(urllong)
-
-	log.Println("short url: ", shorturl)
+	encod := shortURL(string(urllong))
+	shorturl := PREFIX_URL + encod
+	listURL[encod] = string(urllong)
+	log.Print("[POST] short-url:", shorturl, " long-url:", string(urllong), ", encod:", encod)
 
 	// код 201
 	w.WriteHeader(http.StatusCreated)
