@@ -5,13 +5,12 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"strings"
 
 	"github.com/go-chi/chi/v5"
 )
 
 const (
-	prefixURL string = "?http://gio/"
+	prefixURL string = ""
 )
 
 var listURL map[string]string
@@ -35,7 +34,7 @@ func shortURL(url string) string {
 
 func RouterInc(r chi.Router) {
 
-	r.Get("/", geturl)
+	r.Get("/{id}", geturl)
 
 	r.Post("/", posturl)
 
@@ -44,16 +43,17 @@ func RouterInc(r chi.Router) {
 func geturl(w http.ResponseWriter, r *http.Request) {
 
 	// принимаем url-параметр
-	getShortURL01 := r.URL.RawQuery
-	log.Print("[GET] getUrlong:", getShortURL01)
+	//getShortURL01 := r.URL.RawQuery
+	//getShortURL01 := chi.URLParam(r, "id")
+	//log.Print("[GET] getUrlong:", getShortURL01)
 
 	getShortURL := chi.URLParam(r, "id")
-	sliceShortURL := strings.Split(getShortURL01, "/")
-	log.Print("[GET] sliceShortURL:", sliceShortURL)
+	//sliceShortURL := strings.Split(getShortURL, "/")
+	//log.Print("[GET] sliceShortURL:", sliceShortURL)
 
-	if len(sliceShortURL) > 0 {
-		getShortURL = sliceShortURL[len(sliceShortURL)-1]
-	}
+	//if len(sliceShortURL) > 0 {
+	//	getShortURL = sliceShortURL[len(sliceShortURL)-1]
+	//}
 
 	// получаем оригинал-url
 	urllong := listURL[getShortURL]
