@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	prefixURL string = "?id=http://gio.com/"
+	prefixURL string = "?http://gio/"
 )
 
 var listURL map[string]string
