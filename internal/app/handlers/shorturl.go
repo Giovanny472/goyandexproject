@@ -35,13 +35,13 @@ func shortURL(url string) string {
 
 func RouterInc(r chi.Router) {
 
-	r.Get("/{id}", geturl)
+	r.Get("/{id}", Geturl)
 
 	r.Post("/", posturl)
 
 }
 
-func geturl(w http.ResponseWriter, r *http.Request) {
+func Geturl(w http.ResponseWriter, r *http.Request) {
 
 	// принимаем url-параметр
 	getShortURL := chi.URLParam(r, "id")
