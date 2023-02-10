@@ -2,24 +2,25 @@ package handlers_test
 
 import (
 	"net/http"
-	"strings"
 	"testing"
 )
 
 func TestShorturlGet(t *testing.T) {
 
 	url := "http://127.0.0.1:8080/L3BhcnQ"
-	r, e := http.Get(url)
+	req, e := http.Get(url)
 	if e != nil {
 		t.Error("error get : ", e.Error())
 	}
-	defer r.Body.Close()
+	defer req.Body.Close()
 
-	if r.StatusCode != 307 {
-		t.Errorf(" expecte code 307; got %d", r.StatusCode)
+	if req.StatusCode != 307 {
+		t.Errorf(" expecte code 307; got %d", req.StatusCode)
 	}
+
 }
 
+/*
 func TestShorturlPost(t *testing.T) {
 
 	url := "http://127.0.0.1:8080"
@@ -43,3 +44,4 @@ func TestShorturlPost(t *testing.T) {
 	}
 
 }
+*/

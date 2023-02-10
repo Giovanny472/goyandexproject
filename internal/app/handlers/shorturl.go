@@ -51,15 +51,12 @@ func geturl(w http.ResponseWriter, r *http.Request) {
 	log.Print("[GET] getUrlong:", urllong, ", shortURL:", getShortURL)
 
 	//***** формируем ответ ********
-	//w.Header().Set("Content-Type", "text/html; charset=UTF-8")
+	w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 	w.Header().Set("Location", urllong)
-	//w.Header().Add("Location", urllong)
 
 	// код 307
 	w.WriteHeader(http.StatusTemporaryRedirect)
 
-	// возвращаем url
-	//w.Write([]byte(urllong))
 }
 
 func posturl(w http.ResponseWriter, r *http.Request) {
