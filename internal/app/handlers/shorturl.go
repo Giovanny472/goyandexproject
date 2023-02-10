@@ -10,7 +10,8 @@ import (
 )
 
 const (
-	prefixURL string = ""
+	prefixURL string = "/"
+	sufixURL  string = ""
 )
 
 var listURL map[string]string
@@ -43,17 +44,7 @@ func RouterInc(r chi.Router) {
 func geturl(w http.ResponseWriter, r *http.Request) {
 
 	// принимаем url-параметр
-	//getShortURL01 := r.URL.RawQuery
-	//getShortURL01 := chi.URLParam(r, "id")
-	//log.Print("[GET] getUrlong:", getShortURL01)
-
 	getShortURL := chi.URLParam(r, "id")
-	//sliceShortURL := strings.Split(getShortURL, "/")
-	//log.Print("[GET] sliceShortURL:", sliceShortURL)
-
-	//if len(sliceShortURL) > 0 {
-	//	getShortURL = sliceShortURL[len(sliceShortURL)-1]
-	//}
 
 	// получаем оригинал-url
 	urllong := listURL[getShortURL]
@@ -80,7 +71,7 @@ func posturl(w http.ResponseWriter, r *http.Request) {
 
 	// сокращение url
 	encod := shortURL(string(urllong))
-	shorturl := prefixURL + encod
+	shorturl := prefixURL + encod + sufixURL
 	listURL[encod] = string(urllong)
 	log.Print("[POST] short-url:", shorturl, " long-url:", string(urllong), ", encod:", encod)
 
