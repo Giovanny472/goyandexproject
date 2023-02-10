@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	prefixURL string = "/"
+	prefixURL string = "http://127.0.0.1:8080/"
 	sufixURL  string = ""
 )
 
@@ -48,15 +48,18 @@ func geturl(w http.ResponseWriter, r *http.Request) {
 
 	// получаем оригинал-url
 	urllong := listURL[getShortURL]
-	log.Print("[GET] getUrlong:", urllong, " ,shortURL:", getShortURL)
+	log.Print("[GET] getUrlong:", urllong, ", shortURL:", getShortURL)
 
 	//***** формируем ответ ********
-	w.Header().Set("Content-Type", "text/html; charset=UTF-8")
+	//w.Header().Set("Content-Type", "text/html; charset=UTF-8")
+	w.Header().Set("Location", urllong)
+	//w.Header().Add("Location", urllong)
 
 	// код 307
 	w.WriteHeader(http.StatusTemporaryRedirect)
+
 	// возвращаем url
-	w.Write([]byte(urllong))
+	//w.Write([]byte(urllong))
 }
 
 func posturl(w http.ResponseWriter, r *http.Request) {
